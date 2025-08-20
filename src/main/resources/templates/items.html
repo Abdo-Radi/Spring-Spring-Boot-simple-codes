@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            background: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        thead {
+            background: #4a90e2;
+            color: white;
+        }
+        
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+        
+        th:last-child {
+            border-top-right-radius: 10px;
+        }
+        
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #f1f7ff;
+            transition: background-color 0.2s;
+        }
+        
+        .id-cell {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .name-cell {
+            color: #34495e;
+        }
+        
+        .price-cell {
+            font-weight: 600;
+            color: #27ae60;
+            text-align: right;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-view {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f9ff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4a90e2;
+        }
+        
+        .summary-label {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            align-items: center;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .pagination-btn {
+            padding: 10px 16px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .pagination-btn:hover {
+            background: #357ae8;
+        }
+        
+        .pagination-info {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+        
+        .export-btn {
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .export-btn:hover {
+            background: #219653;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #bdc3c7;
+        }
+        
+        .empty-state p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .add-item-btn {
+            padding: 12px 24px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .add-item-btn:hover {
+            background: #357ae8;
+        }
+        
+        @media (max-width: 768px) {
+            th, td {
+                padding: 12px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .summary {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Items Management</h1>
+        <p class="subtitle">View and manage your inventory items</p>
+    </header>
+    
+    <div class="container">
+        <div class="content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>PRICE (MAD)</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Sample data for demonstration - will be replaced by Thymeleaf -->
+                        <tr th:if="${allItems == null or #lists.isEmpty(allItems)}">
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <i class="fas fa-box-open"></i>
+                                    <p>No items found in your inventory</p>
+                                    <a th:href="@{/itemForm}" class="add-item-btn">
+                                        <i class="fas fa-plus"></i> Add Your First Item
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Thymeleaf iteration for actual data -->
+                        <tr th:each="item : ${allItems}" th:unless="${allItems == null or #lists.isEmpty(allItems)}">
+                            <td class="id-cell" th:text="${item.id}">1001</td>
+                            <td class="name-cell" th:text="${item.name}">Laptop Pro 15"</td>
+                            <td class="price-cell" th:text="${item.price == 0 ? '0.00' : #numbers.formatDecimal(item.price, 1, 2)}">12,499.00</td>
+                            <td class="actions">
+                                <button class="btn btn-view"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-edit"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-delete"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="summary" th:if="${allItems != null and not #lists.isEmpty(allItems)}">
+                <div class="summary-item">
+                    <div class="summary-value" th:text="${#lists.size(allItems)}">5</div>
+                    <div class="summary-label">Total Items</div>
+                </div>
+                <div class="summary-item">
+                    <!-- Safe evaluation with default value if totalValue is null -->
+                    <div class="summary-value" th:text="${totalValue != null ? #numbers.formatDecimal(totalValue, 1, 2) : '0.00'}">16,676.49</div>
+                    <div class="summary-label">Total Value (MAD)</div>
+                </div>
+                <div class="summary-item">
+                    <!-- Safe division with null checks -->
+                    <div class="summary-value" th:text="${(totalValue != null and #lists.size(allItems) > 0) ? #numbers.formatDecimal(totalValue/#lists.size(allItems), 1, 2) : '0.00'}">3,335.30</div>
+                    <div class="summary-label">Average Price (MAD)</div>
+                </div>
+            </div>
+            
+            <div class="footer" th:if="${allItems != null and not #lists.isEmpty(allItems)}">
+                <div class="pagination">
+                    <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="pagination-btn" style="background: #357ae8;">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="pagination-info">
+                    Showing <span th:text="${#lists.size(allItems)}">5</span> of <span th:text="${totalCount != null ? totalCount : #lists.size(allItems)}">15</span> items
+                </div>
+                
+                <button class="export-btn">
+                    <i class="fas fa-download"></i> Export as CSV
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 Inventory Management System | Built with Spring Boot and Thymeleaf</p>
+    </footer>
+
+    <script>
+        // Add interactivity to the table rows
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (!e.target.closest('button') && !row.querySelector('.empty-state')) {
+                    row.classList.toggle('selected');
+                }
+            });
+        });
+        
+        // Add functionality to action buttons
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = e.target.closest('tr').querySelector('.id-cell').textContent;
+                alert('View details for item ID: ' + id);
+            });
+        });
+        
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = e.target.closest('tr').querySelector('.id-cell').textContent;
+                alert('Edit item ID: ' + id);
+            });
+        });
+        
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = e.target.closest('tr').querySelector('.id-cell').textContent;
+                if (confirm('Are you sure you want to delete item ID: ' + id + '?')) {
+                    e.target.closest('tr').style.opacity = '0.5';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
