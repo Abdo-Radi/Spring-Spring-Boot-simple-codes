@@ -208,16 +208,18 @@
             
             <div class="form-container">
                 <form method="post" th:object="${item}" th:action="@{/dataSubmitForm}">
-                    <div class="form-group">
-                        <label for="idInput">ID</label>
-                        <input type="text" id="idInput" placeholder="Enter item ID" th:field="*{id}">
-                    </div>
+                    
                     
                     <div class="form-group">
                         <label for="nameInput">Name</label>
+                        <p style="color:red;" th:errors="*{name}"></p>
                         <input type="text" id="nameInput" placeholder="Enter item name" th:field="*{name}">
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="brandInput">Brand</label>
+                        <p style="color:red;" th:errors="*{brand}"></p>
+                        <input type="text" id="brandInput" placeholder="Enter item brand" th:field="*{brand}">
+                    </div>
                     <div class="form-group">
                         <label for="priceInput">Price</label>
                         <input type="text" id="priceInput" placeholder="Enter price (e.g., 29.99)" th:field="*{price}">

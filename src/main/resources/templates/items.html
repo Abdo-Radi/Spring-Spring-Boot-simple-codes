@@ -298,8 +298,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>NAME</th>
+                            <th>BRAND</th>
                             <th>PRICE (MAD)</th>
                             <th>ACTIONS</th>
                         </tr>
@@ -320,8 +320,8 @@
                         
                         <!-- Thymeleaf iteration for actual data -->
                         <tr th:each="item : ${allItems}" th:unless="${allItems == null or #lists.isEmpty(allItems)}">
-                            <td class="id-cell" th:text="${item.id}">1001</td>
                             <td class="name-cell" th:text="${item.name}">Laptop Pro 15"</td>
+                            <td class="id-cell" th:text="${item.brand}">1001</td>
                             <td class="price-cell" th:text="${item.price == 0 ? '0.00' : #numbers.formatDecimal(item.price, 1, 2)}">12,499.00</td>
                             <td class="actions">
                                 <button class="btn btn-view"><i class="fas fa-eye"></i></button>

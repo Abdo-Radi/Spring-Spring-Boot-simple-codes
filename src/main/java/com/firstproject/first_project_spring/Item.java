@@ -1,19 +1,28 @@
 package com.firstproject.first_project_spring;
 
+import jakarta.validation.constraints.NotBlank;
+
+
 public class Item {
-    private Integer id;
+    
+    private String id;
+    @NotBlank(message = "the name input should not be blank")
     private String name;
+    @NotBlank(message = "the brand input should not be blank")
+    private String brand;
     private Double price;
-    public Item(Integer id, String name, Double price) {
-        this.id = id;
+    public Item(String id, String name, String brand, Double price) {
+        this.id = id;        
         this.name = name;
+        this.brand = brand;
         this.price = price;
     }
     public Item(){};
-    public Integer getId() {
+    
+    public String getId() {
         return this.id;
     }
-    public void setId(Integer newId) {
+    public void setId(String newId) {
         this.id = newId;
     }
 
@@ -29,5 +38,11 @@ public class Item {
     }
     public void setPrice(Double newPrice) {
         this.price = newPrice;
+    }
+    public String getBrand() {
+        return brand;
+    }
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }
