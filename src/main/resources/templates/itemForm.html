@@ -224,6 +224,7 @@
                         <label for="priceInput">Price</label>
                         <input type="text" id="priceInput" placeholder="Enter price (e.g., 29.99)" th:field="*{price}">
                     </div>
+                    <input type="hidden" th:field="*{id}">
                     
                     <button type="submit">Add Item</button>
                 </form>
